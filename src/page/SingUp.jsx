@@ -36,7 +36,7 @@ export default function SignUp() {
       });
       const data = await response.json();
       if (!data.error) {
-        nav("/");
+        nav("/home");
       }
     } catch (error) {
       console.log(error);
@@ -95,7 +95,7 @@ export default function SignUp() {
       console.log(data);
       console.log(res.status);
       if (res.status !== 200){
-        setSendOtpValue(send)
+        setSendOtpValue("Send OTP")
         return setError((prevState) => ({ ...prevState, otp: error.otp }));}
       setIsEnterOtp(true);
       setSendOtpValue(60);
