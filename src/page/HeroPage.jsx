@@ -24,13 +24,13 @@ function HeroPage() {
             <div className="flex items-center gap-3">
               <Link
                 to="/login"
-                className="px-5 py-2.5 text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition-all duration-200"
+                className="px-5 py-2.5 max-sm:hidden text-gray-700  font-medium rounded-xl hover:bg-gray-100 transition-all duration-200"
               >
                 Sign In
               </Link>
               <Link
                 to="/signup"
-                className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200"
+                className="px-5 py-2.5 max-sm:hidden bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200"
               >
                 Get Started
               </Link>
