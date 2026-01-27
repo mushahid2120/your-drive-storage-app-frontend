@@ -83,6 +83,7 @@ export default function SignUp() {
 
   const handleClickOTP = async () => {
     try {
+      if(form.otp==='') return
       setSendOtpValue("Sending..");
       if (!emailRef.current.reportValidity()) return;
       const cleanEmail = DOMPurify.sanitize(form.email);

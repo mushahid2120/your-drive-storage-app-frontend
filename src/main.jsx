@@ -44,12 +44,11 @@ const router = createBrowserRouter([
     path: "/",
     element: <HeroPage />,
   },
+  { path: "*", element: <main>This Error Page .....</main> },
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router}>
-    <StrictMode>
-      <App />
-    </StrictMode>
-  </RouterProvider>
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>
 );
