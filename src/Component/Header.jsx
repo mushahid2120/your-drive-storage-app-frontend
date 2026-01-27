@@ -109,7 +109,7 @@ function Header({
                       <img
                         src={userDetail.picture}
                         alt="Profile"
-                        className="w-10 h-10 rounded-full object-cover border-2 border-blue-500 shadow-lg hover:scale-110 transition-transform duration-200 cursor-pointer"
+                        className="w-10 h-10 rounded-[100%] object-cover border-2 border-blue-500 shadow-lg hover:scale-110 transition-transform duration-200 cursor-pointer"
                       />
                     </div>
                   ) : (
