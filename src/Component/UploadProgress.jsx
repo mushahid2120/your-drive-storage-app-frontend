@@ -9,7 +9,6 @@ function UploadProgress({progress}) {
                 </h2>
                 {Object.entries(progress).map(
                   ([filename, { controller, dataTransfer }], i) => {
-                    console.log(filename, controller, dataTransfer);
                     return (
                       <UploadProgressBar
                         filename={filename}

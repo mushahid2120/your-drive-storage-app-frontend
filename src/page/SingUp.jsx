@@ -83,7 +83,8 @@ export default function SignUp() {
 
   const handleClickOTP = async () => {
     try {
-      if(form.otp==='') return
+      
+      if(!emailRef.current.reportValidity()) return
       setSendOtpValue("Sending..");
       if (!emailRef.current.reportValidity()) return;
       const cleanEmail = DOMPurify.sanitize(form.email);
@@ -95,9 +96,10 @@ export default function SignUp() {
       const data = await res.json();
       console.log(data);
       console.log(res.status);
+
       if (res.status !== 200){
         setSendOtpValue("Send OTP")
-        return setError((prevState) => ({ ...prevState, otp: error.otp }));}
+        return setError((prevState) => ({ ...prevState, email: data.error.otp }));}
       setIsEnterOtp(true);
       setSendOtpValue(60);
       const IntId = setInterval(() => {
@@ -124,7 +126,7 @@ export default function SignUp() {
       });
       const data = await res.json();
       if (res.status === 200) {
-        navigate("/");
+        navigate("/home");
         return;
       }
       console.log(data);

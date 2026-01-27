@@ -125,10 +125,12 @@ function App() {
         method: "DELETE",
       });
       const resData = await response.json();
+      if (resData.error) setNetErr(resData.error);
       fetchData();
       console.log(resData);
     } catch (error) {
       console.log("Cannot Delete!!!");
+      setNetErr("Cloud not Delete File");
     }
   };
 
@@ -185,7 +187,7 @@ function App() {
             const percent = Math.round((e.loaded * 100) / e.total);
             setProgress((prevState) => ({
               ...prevState,
-              [filename]: { ...prevState[filename], dataTransfer: percent },
+              [filename]: { ...prevState[filename], dataTransfer: percent ,controller},
             }));
           },
         });
@@ -368,7 +370,7 @@ function App() {
           <UploadProgress progress={progress} />
         )}
 
-        {userDetail !== null  && isAuthorized ? (
+        {userDetail !== null && isAuthorized ? (
           <>
             <Breadcrumb path={driveContent.path} />
             {driveContent?.directories && (
