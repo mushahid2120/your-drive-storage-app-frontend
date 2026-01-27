@@ -105,7 +105,7 @@ function Header({
                   className="group"
                 >
                   {userDetail ? (
-                    <div className="relative">
+                    <div className="relative rounded-[100%]">
                       <img
                         src={userDetail.picture}
                         alt="Profile"
@@ -113,7 +113,7 @@ function Header({
                       />
                     </div>
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center hover:scale-110 transition-transform duration-200 cursor-pointer shadow-md">
+                    <div className="w-10 h-10 rounded-[100px] bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center hover:scale-110 transition-transform duration-200 cursor-pointer shadow-md">
                       <svg
                         className="w-5 h-5 text-gray-600"
                         fill="currentColor"

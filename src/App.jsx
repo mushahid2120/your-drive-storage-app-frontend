@@ -64,7 +64,7 @@ function App() {
         setUserDetail(data);
       } else {
         setIsAuthorized(false);
-        nav("/hero");
+        nav("/login");
       }
     } catch (error) {
       console.log(error);

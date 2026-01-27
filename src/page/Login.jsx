@@ -28,7 +28,7 @@ export default function Login() {
       });
       const data = await response.json();
       if (!data.error) {
-        console.log("alread og");
+        console.log("already log");
         nav("/home");
       }
     } catch (error) {
