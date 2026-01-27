@@ -90,6 +90,7 @@ function App() {
       const resData = await res.json();
       console.log(resData);
       if (resData.error) setNetErr(resData.error);
+      
       fetchData();
     } catch (error) {
       console.log(error.message);
