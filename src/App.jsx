@@ -29,7 +29,7 @@ function App() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [userDetail, setUserDetail] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [netErr, setNetErr] = useState("");
+  const [popup, setPopup] = useState(null);
 
   const inputRef = useRef();
   const nav = useNavigate();
@@ -46,10 +46,13 @@ function App() {
       if (!data.error) {
         setDriveContent(data);
         setIsAuthorized(true);
-      } else setNetErr(resData.error);
+      }
     } catch (error) {
       console.log("Failed to Fetch....");
-      setNetErr("Server down please try after some time");
+      setPopup({
+        message: "Server down please try after some time",
+        isError: true,
+      });
     }
   };
 
@@ -68,7 +71,10 @@ function App() {
       }
     } catch (error) {
       console.log(error);
-      setNetErr("server down unable to fetch user data");
+      setPopup({
+        message: "server down unable to fetch user data",
+        isError: true,
+      });
     }
   };
 
@@ -89,12 +95,12 @@ function App() {
       });
       const resData = await res.json();
       console.log(resData);
-      if (resData.error) setNetErr(resData.error);
-      
+      if (resData.error) setPopup({ message: resData.error, isError: true });
+      else setPopup({ message: "File Renamed Successfully", isError: false });
       fetchData();
     } catch (error) {
       console.log(error.message);
-      setNetErr("Could not rename file");
+      setPopup({ message: "Could not rename file", isError: true });
     }
   };
 
@@ -111,10 +117,12 @@ function App() {
       const resData = await res.json();
       console.log(resData);
       fetchData();
-      if (resData.error) setNetErr(resData.error);
+      if (resData.error) setPopup({ message: resData.error, isError: true });
+      else
+        setPopup({ message: "Directory Renamed Successfully", isError: false });
     } catch (error) {
       console.log(error.message);
-      setNetErr("Cloud not rename dir");
+      setPopup({ message: "Cloud not rename dir", isError: true });
     }
   };
 
@@ -126,25 +134,36 @@ function App() {
         method: "DELETE",
       });
       const resData = await response.json();
-      if (resData.error) setNetErr(resData.error);
+      if (resData.error) setPopup({ message: resData.error, isError: true });
+      else setPopup({ message: "File Deleted Successfully", isError: false });
       fetchData();
       console.log(resData);
     } catch (error) {
       console.log("Cannot Delete!!!");
-      setNetErr("Cloud not Delete File");
+      setPopup({ message: "Cloud not Delete File", isError: true });
     }
   };
 
   //Delete Directory
   const handleDeleteDir = async (folderId) => {
-    const response = await fetch(`${BaseUrl}/directory/${selectedItemId}`, {
-      credentials: "include",
-      method: "DELETE",
-    });
-    const resData = await response.json();
-    fetchData();
-    console.log(resData);
-    if (resData.error) setNetErr(resData.error);
+    try {
+      const response = await fetch(`${BaseUrl}/directory/${selectedItemId}`, {
+        credentials: "include",
+        method: "DELETE",
+      });
+      const resData = await response.json();
+      fetchData();
+      console.log(resData);
+      if (resData.error) setPopup({ message: resData.error, isError: true });
+      else
+        setPopup({ message: "Directroy Deleted Successfully", isError: false });
+    } catch (error) {
+      console.log("Unable to delete folder");
+      setPopup({
+        message: "server is down unbale to delete folder ",
+        isError: true,
+      });
+    }
   };
 
   //Upload files
@@ -161,14 +180,14 @@ function App() {
             filesize: file.size,
             filetype: file.type,
           },
-          { headers: { "Content-Type": "application/json" } }
+          { headers: { "Content-Type": "application/json" } },
         );
         console.log({ res });
         if (res.status !== 200) console.log(res);
         return res.data;
       } catch (error) {
         console.log(error.response.data.error);
-        setNetErr(error.response.data.error);
+        setPopup({ message: error.response.data.error, isError: true });
         console.log(error);
       }
     };
@@ -188,7 +207,11 @@ function App() {
             const percent = Math.round((e.loaded * 100) / e.total);
             setProgress((prevState) => ({
               ...prevState,
-              [filename]: { ...prevState[filename], dataTransfer: percent ,controller},
+              [filename]: {
+                ...prevState[filename],
+                dataTransfer: percent,
+                controller,
+              },
             }));
           },
         });
@@ -207,12 +230,22 @@ function App() {
     };
 
     const uploadComplete = async (fileId, file) => {
-      const res = await axios.put(
-        `${BaseUrl}/files/complete/${fileId}`,
-        { filesize: file.size },
-        { headers: { "Content-Type": "application/json" } }
-      );
-      console.log(res);
+      try {
+        const res = await axios.put(
+          `${BaseUrl}/files/complete/${fileId}`,
+          { filesize: file.size },
+          { headers: { "Content-Type": "application/json" } },
+        );
+        console.log(res);
+        if (res.error) setPopup({ message: res.error, isError: true });
+        else
+          setPopup({ message: "File Uploaded Successfully", isError: false });
+      } catch (error) {
+        setPopup({
+          message: "Server is down unable to upload file",
+          isError: true,
+        });
+      }
     };
 
     for (const file of e.target.files) {
@@ -227,7 +260,6 @@ function App() {
       try {
         const uploadRes = await uploadInit(file);
         if (!uploadRes.url) return;
-        console.log("bypasssing");
         await uploadSingleFile(uploadRes.url, file);
         await uploadComplete(uploadRes.fileId, file);
       } catch (error) {
@@ -251,11 +283,12 @@ function App() {
         body: JSON.stringify({ foldername: cleanInput }),
       });
       const resData = await res.json();
-      if (resData.error) setNetErr(resData.error);
+      if (resData.error) setPopup({message:resData.error,isError:true});
+      else setPopup({message:"Directory Created Successfully",isError:false})
       fetchData();
     } catch (error) {
       console.log("Directory not created");
-      setNetErr("Cloud not create directory");
+      setPopup({message:"Cloud not create directory",isError:true});
     }
   };
 
@@ -269,11 +302,12 @@ function App() {
       const data = await res.json();
       console.log(data);
       setUserDetail(null);
-      if (data.error) return setNetErr(data.error);
+      if (data.error) return setPopup({message:data.error,isError:true});
+      else setPopup({message:"Logout Successfully",isError:false})
       nav("/login");
     } catch (error) {
       console.log(error.message);
-      setNetErr("Could not Logout");
+      setPopup({message:"Could not Logout",isError:true});
     }
   };
 
@@ -287,11 +321,12 @@ function App() {
       const data = await res.json();
       console.log(data);
       setUserDetail(null);
-      if (resData.error) setNetErr(resData.error);
+      if (resData.error) setPopup({message:data.error,isError:true});
+      else setPopup({message:"Logout from all devices Successfully",isError:false})
       nav("/login");
     } catch (error) {
       console.log(error.message);
-      setNetErr("Could not logout from all device");
+      setPopup({message:"Server is down Couldn't logout from all devices",isError:true});
     }
   };
 
@@ -330,12 +365,12 @@ function App() {
             isPortalOpen.header === "Create Directory"
               ? handleCreateDir
               : isPortalOpen.header === "Rename directory"
-              ? handleRenameDir
-              : isPortalOpen.header === "Rename files"
-              ? handleRenameFile
-              : isPortalOpen.header === "Delete directory"
-              ? handleDeleteDir
-              : handleDeleteFile
+                ? handleRenameDir
+                : isPortalOpen.header === "Rename files"
+                  ? handleRenameFile
+                  : isPortalOpen.header === "Delete directory"
+                    ? handleDeleteDir
+                    : handleDeleteFile
           }
         >
           <div>
@@ -362,7 +397,7 @@ function App() {
         </Portal>
       )}
 
-      <ToastPopup netErr={netErr} setNetErr={setNetErr} />
+      <ToastPopup popup={popup} setPopup={setPopup} />
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-6 pt-1 pb-4">
