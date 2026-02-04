@@ -35,4 +35,5 @@ jobs:
         run: aws s3 cp dist/ "s3://${S3_BUCKET_NAME}/" --recursive
 
       - name: Invalidate Cloudfront
-        run: aws cloudfont-create-invalidation --distribution_id $CLOUDFRONT_DIS_ID --path "/index.html"
+        run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIS_ID --paths "/index.html"
+
