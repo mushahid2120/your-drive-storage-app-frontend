@@ -1,0 +1,38 @@
+name: Deploy StorageApp Frontend
+on: [push, workflow_dispatch]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      S3_BUCKET_NAME: ${{vars.S3_BUCKET_NAME}}
+      CLOUDFRONT_DIS_ID: ${{vars.CLOUDFRONT_DIS_ID}}
+      VITE_GOOGLE_CLIENT_ID: ${{vars.VITE_GOOGLE_CLIENT_ID}}
+      VITE_BACKEND_BASE_URL: ${{vars.VITE_BACKEND_BASE_URL}}
+
+    steps:
+      - name: Fetch from Github
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+
+      - name: Cofigure AWS Crednetials
+        uses: aws-actions/configure-aws-credentials@v5.1.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Upload to S3
+        run: aws s3 cp dist/ "s3://${S3_BUCKET_NAME}/ --recursive
+
+      - name: Invalidate Cloudfront
+        run: aws cloudfont-create-invalidation --distribution_id $CLOUDFRONT_DIS_ID --path "/index.html
