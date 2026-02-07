@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 
-function Portal({ setIsPortalOpen, handleSubmit, inputRef, inputValue,children,isPortalOpen }) {
+function Portal({ setIsPortalOpen, handleSubmit, inputRef,setInputValue, inputValue,children,isPortalOpen }) {
   const id = useId();
 
   useEffect(() => {
@@ -29,6 +29,7 @@ return createPortal(
           e.preventDefault();
           handleSubmit(e);
           setIsPortalOpen(false);
+          setInputValue('')
         }}
       >
         {/* Header */}

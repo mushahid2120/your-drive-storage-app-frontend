@@ -5,8 +5,11 @@ import { BaseUrl } from "../App";
 import DOMPurify from "dompurify";
 import Header from "../Component/Header";
 import { useEffect } from "react";
+import ToastPopup from "../Component/ToastPopup";
 
 export default function SignUp() {
+  const [popup, setPopup] = useState(null);
+  const [buttonName, setButtonName] = useState("Sign Up");
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -56,35 +59,42 @@ export default function SignUp() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const cleanName = DOMPurify.sanitize(form.name);
-    const cleanEmail = DOMPurify.sanitize(form.email);
-    const cleanOTP = DOMPurify.sanitize(form.otp);
-    const res = await fetch(`${BaseUrl}/auth/singup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: cleanName,
-        email: cleanEmail,
-        password: form.password,
-        otp: cleanOTP,
-      }),
-    });
-    const data = await res.json();
-    const errorResponse = data.error;
-    if (errorResponse)
-      return setError((prevState) => ({ ...prevState, ...errorResponse }));
-    console.log(data);
-    if (res.status === 200) {
-      setForm({ name: "", email: "", password: "" });
-      navigate("/login");
+    try {
+      setButtonName('Signing Up')
+      e.preventDefault();
+      const cleanName = DOMPurify.sanitize(form.name);
+      const cleanEmail = DOMPurify.sanitize(form.email);
+      const cleanOTP = DOMPurify.sanitize(form.otp);
+      const res = await fetch(`${BaseUrl}/auth/singup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: cleanName,
+          email: cleanEmail,
+          password: form.password,
+          otp: cleanOTP,
+        }),
+      });
+      const data = await res.json();
+      const errorResponse = data.error;
+      if (errorResponse){
+        setButtonName("Sign Up")
+        return setError((prevState) => ({ ...prevState, ...errorResponse }));}
+      console.log(data);
+      if (res.status === 200) {
+        setForm({ name: "", email: "", password: "" });
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      setButtonName('Sing Up')
+      setPopup({ isError: true, message: "Server is down please try again" });
     }
   };
 
   const handleClickOTP = async () => {
     try {
-      
-      if(!emailRef.current.reportValidity()) return
+      if (!emailRef.current.reportValidity()) return;
       setSendOtpValue("Sending..");
       if (!emailRef.current.reportValidity()) return;
       const cleanEmail = DOMPurify.sanitize(form.email);
@@ -97,9 +107,13 @@ export default function SignUp() {
       console.log(data);
       console.log(res.status);
 
-      if (res.status !== 200){
-        setSendOtpValue("Send OTP")
-        return setError((prevState) => ({ ...prevState, email: data.error.otp }));}
+      if (res.status !== 200) {
+        setSendOtpValue("Send OTP");
+        return setError((prevState) => ({
+          ...prevState,
+          email: data.error.otp,
+        }));
+      }
       setIsEnterOtp(true);
       setSendOtpValue(60);
       const IntId = setInterval(() => {
@@ -113,6 +127,8 @@ export default function SignUp() {
       }, 1000);
     } catch (error) {
       console.log(error);
+      setSendOtpValue("Send OTP");
+      setPopup({ isError: true, message: "Server is down please try again" });
     }
   };
 
@@ -132,11 +148,13 @@ export default function SignUp() {
       console.log(data);
     } catch (error) {
       console.log(error);
+      setPopup({ isError: true, message: "Server is down please try again" });
     }
   };
 
   return (
     <>
+      <ToastPopup popup={popup} setPopup={setPopup} />
       <Header showProfileIcon={false} />
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 p-4">
         <div className="w-full max-w-md">
@@ -222,7 +240,11 @@ export default function SignUp() {
                   <button
                     type="button"
                     className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 shadow-md shadow-blue-500/30 hover:shadow-lg hover:shadow-blue-500/40 transition-all duration-200"
-                    onClick={(sendOtpValue==='Send OTP' || sendOtpValue==='Resend Otp') && handleClickOTP}
+                    onClick={
+                      (sendOtpValue === "Send OTP" ||
+                        sendOtpValue === "Resend Otp") &&
+                      handleClickOTP
+                    }
                   >
                     {sendOtpValue}
                   </button>
@@ -318,14 +340,38 @@ export default function SignUp() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className={`w-full py-3.5 rounded-xl font-semibold text-white transition-all duration-200 ${
+                className={`w-full relative py-3.5 rounded-xl font-semibold text-white transition-all duration-200 ${
                   isEnterOtp
                     ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40"
                     : "bg-gray-300 cursor-not-allowed"
                 }`}
                 disabled={!isEnterOtp}
               >
-                {isEnterOtp ? "Create Account" : "Verify Email First"}
+                {buttonName !== "Sign Up" && (
+                  <div className="absolute inset-0- right-1/3 top-1/2 -translate-y-1/2 ">
+                    <svg
+                      className="animate-spin h-6 w-6"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                  </div>
+                )}
+                {buttonName}
               </button>
 
               {/* Divider */}

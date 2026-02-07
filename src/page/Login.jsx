@@ -4,12 +4,17 @@ import { GoogleLogin } from "@react-oauth/google";
 import { BaseUrl } from "../App";
 import Header from "../Component/Header";
 import { useEffect } from "react";
+import ToastPopup from "../Component/ToastPopup";
 
 export default function Login() {
+  const [popup, setPopup] = useState(null);
+  const [buttonName, setButtonName] = useState("Sign In");
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
   const [error, setError] = useState("");
   const nav = useNavigate();
 
@@ -37,16 +42,27 @@ export default function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch(`${BaseUrl}/auth/login`, {
-      credentials: "include",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    const data = await res.json();
-    if (res.status === 401) return setError(data.error);
-    if (res.status === 200) nav("/home");
+    try {
+      setButtonName("Signing In");
+      e.preventDefault();
+      const res = await fetch(`${BaseUrl}/auth/login`, {
+        credentials: "include",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (res.status === 401) {
+        setButtonName("Sign In");
+        return setError(data.error);
+      }
+      if (res.status === 200) nav("/home");
+      setButtonName("Sign In");
+    } catch (error) {
+      console.log(error);
+      setPopup({ isError: true, message: "Server is down please try again" });
+      setButtonName("Sign In");
+    }
   };
 
   const handleLoginWithGoogle = async (response) => {
@@ -65,19 +81,20 @@ export default function Login() {
       console.log(data);
     } catch (error) {
       console.log(error);
+      setPopup({ isError: true, message: "Server is down please try again" });
     }
   };
 
   return (
     <>
+      <ToastPopup popup={popup} setPopup={setPopup} />
       <Header showProfileIcon={false} />
-      <div
-        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 p-4"
-      >
+
+      <div className=" min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 p-4">
         <div className="w-full max-w-md">
           {/* Header Section */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <div className=" w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
               <svg
                 className="w-9 h-9 text-white"
                 fill="none"
@@ -125,12 +142,12 @@ export default function Login() {
                   <label className="block text-sm font-semibold text-gray-700">
                     Password
                   </label>
-                  <a
+                  {/* <a
                     href="/forgot-password"
                     className="text-xs text-blue-600 hover:text-blue-700 font-semibold transition-colors"
                   >
                     Forgot password?
-                  </a>
+                  </a> */}
                 </div>
                 <input
                   type="password"
@@ -168,9 +185,33 @@ export default function Login() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200"
+                className="w-full relative py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200"
               >
-                Sign In
+                {buttonName !== "Sign In" && (
+                  <div className="absolute inset-0- right-1/3 top-1/2 -translate-y-1/2 ">
+                    <svg
+                      className="animate-spin h-6 w-6"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                  </div>
+                )}
+                {buttonName}
               </button>
 
               {/* Divider */}

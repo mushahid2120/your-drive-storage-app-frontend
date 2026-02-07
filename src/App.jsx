@@ -30,6 +30,7 @@ function App() {
   const [userDetail, setUserDetail] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [popup, setPopup] = useState(null);
+  const [isServerDown, setIsServerDown] = useState(false);
 
   const inputRef = useRef();
   const nav = useNavigate();
@@ -71,10 +72,7 @@ function App() {
       }
     } catch (error) {
       console.log(error);
-      setPopup({
-        message: "server down unable to fetch user data",
-        isError: true,
-      });
+      setIsServerDown(true);
     }
   };
 
@@ -283,12 +281,13 @@ function App() {
         body: JSON.stringify({ foldername: cleanInput }),
       });
       const resData = await res.json();
-      if (resData.error) setPopup({message:resData.error,isError:true});
-      else setPopup({message:"Directory Created Successfully",isError:false})
+      if (resData.error) setPopup({ message: resData.error, isError: true });
+      else
+        setPopup({ message: "Directory Created Successfully", isError: false });
       fetchData();
     } catch (error) {
       console.log("Directory not created");
-      setPopup({message:"Cloud not create directory",isError:true});
+      setPopup({ message: "Cloud not create directory", isError: true });
     }
   };
 
@@ -302,12 +301,12 @@ function App() {
       const data = await res.json();
       console.log(data);
       setUserDetail(null);
-      if (data.error) return setPopup({message:data.error,isError:true});
-      else setPopup({message:"Logout Successfully",isError:false})
+      if (data.error) return setPopup({ message: data.error, isError: true });
+      else setPopup({ message: "Logout Successfully", isError: false });
       nav("/login");
     } catch (error) {
       console.log(error.message);
-      setPopup({message:"Could not Logout",isError:true});
+      setPopup({ message: "Could not Logout", isError: true });
     }
   };
 
@@ -321,14 +320,40 @@ function App() {
       const data = await res.json();
       console.log(data);
       setUserDetail(null);
-      if (resData.error) setPopup({message:data.error,isError:true});
-      else setPopup({message:"Logout from all devices Successfully",isError:false})
+      if (resData.error) setPopup({ message: data.error, isError: true });
+      else
+        setPopup({
+          message: "Logout from all devices Successfully",
+          isError: false,
+        });
       nav("/login");
     } catch (error) {
       console.log(error.message);
-      setPopup({message:"Server is down Couldn't logout from all devices",isError:true});
+      setPopup({
+        message: "Server is down Couldn't logout from all devices",
+        isError: true,
+      });
     }
   };
+
+  if (isServerDown) {
+    return (
+      <>
+        <Header showProfileIcon={true} />
+        <main className="flex items-center gap-4 justify-center flex-col m-4 font-semibold md:text-xl sm:text-lg">
+          <div>Server is Down ⚠️ 🛠️ 🛑 Please Try again later</div>
+          <div
+            className="text-blue-700 cursor-pointer"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            ⟳ Reload
+          </div>
+        </main>
+      </>
+    );
+  }
 
   return (
     <div
