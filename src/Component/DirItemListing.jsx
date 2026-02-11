@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaDownload } from "react-icons/fa";
 import ContextMenu from "./ContextMenu";
 import { BaseUrl } from "../App";
 
@@ -244,7 +242,10 @@ function DirItemListing({
                         onClick={(e) => e.stopPropagation()}
                         className="w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 flex items-center justify-center transition-colors"
                       >
-                        <FaDownload size={13} className="text-green-600" />
+                  
+                        <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+  <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+</svg>
                       </Link>
                     )}
                     <button
@@ -260,10 +261,9 @@ function DirItemListing({
                       }}
                       className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                     >
-                      <BsThreeDotsVertical
-                        size={15}
-                        className="text-gray-600"
-                      />
+                      <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+</svg>
                     </button>
                   </div>
 
@@ -376,7 +376,9 @@ function DirItemListing({
                         onClick={(e) => e.stopPropagation()}
                         className="w-9 h-9 rounded-lg bg-green-100 hover:bg-green-200 flex items-center justify-center transition-colors"
                       >
-                        <FaDownload size={14} className="text-green-600" />
+                        <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+  <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+</svg>
                       </Link>
                     )}
                     <button
@@ -392,10 +394,9 @@ function DirItemListing({
                       }}
                       className="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                     >
-                      <BsThreeDotsVertical
-                        size={16}
-                        className="text-gray-600"
-                      />
+                      <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+</svg>
                     </button>
                   </div>
 

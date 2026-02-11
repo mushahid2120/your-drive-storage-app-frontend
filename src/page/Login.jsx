@@ -8,7 +8,7 @@ import ToastPopup from "../Component/ToastPopup";
 
 export default function Login() {
   const [popup, setPopup] = useState(null);
-  const [buttonName, setButtonName] = useState("Sign In");
+  const [isLogging, setIsLogging] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -19,6 +19,7 @@ export default function Login() {
   const nav = useNavigate();
 
   const handleChange = (e) => {
+    if(error!=="") setError("")
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -43,7 +44,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     try {
-      setButtonName("Signing In");
+      setIsLogging(true);
       e.preventDefault();
       const res = await fetch(`${BaseUrl}/auth/login`, {
         credentials: "include",
@@ -53,15 +54,15 @@ export default function Login() {
       });
       const data = await res.json();
       if (res.status === 401) {
-        setButtonName("Sign In");
+        setIsLogging(false);
         return setError(data.error);
       }
       if (res.status === 200) nav("/home");
-      setButtonName("Sign In");
+      setIsLogging(false);
     } catch (error) {
       console.log(error);
       setPopup({ isError: true, message: "Server is down please try again" });
-      setButtonName("Sign In");
+      setIsLogging(false);
     }
   };
 
@@ -183,36 +184,45 @@ export default function Login() {
               )}
 
               {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full relative py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200"
-              >
-                {buttonName !== "Sign In" && (
-                  <div className="absolute inset-0- right-1/3 top-1/2 -translate-y-1/2 ">
-                    <svg
-                      className="animate-spin h-6 w-6"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                  </div>
-                )}
-                {buttonName}
-              </button>
+<button
+  type="submit"
+  disabled={isLogging}
+  className={`
+    w-full py-3.5 rounded-xl font-semibold text-white
+    transition-all duration-200
+    flex items-center justify-center
+    disabled:cursor-not-allowed
+    ${isLogging 
+      ? 'bg-gradient-to-r from-blue-400 to-blue-500 shadow-md' 
+      : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
+    }
+  `}
+>
+  {isLogging? (
+    <svg
+      className="animate-spin h-6 w-6"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
+  ) : (
+    "Log In"
+  )}
+</button>
 
               {/* Divider */}
               <div className="relative my-6">

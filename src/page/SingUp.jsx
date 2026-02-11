@@ -9,7 +9,7 @@ import ToastPopup from "../Component/ToastPopup";
 
 export default function SignUp() {
   const [popup, setPopup] = useState(null);
-  const [buttonName, setButtonName] = useState("Sign Up");
+  const [isRegistring, setIsRegistring] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -60,7 +60,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     try {
-      setButtonName('Signing Up')
+      setIsRegistring(true)
       e.preventDefault();
       const cleanName = DOMPurify.sanitize(form.name);
       const cleanEmail = DOMPurify.sanitize(form.email);
@@ -78,7 +78,7 @@ export default function SignUp() {
       const data = await res.json();
       const errorResponse = data.error;
       if (errorResponse){
-        setButtonName("Sign Up")
+        setIsRegistring(false)
         return setError((prevState) => ({ ...prevState, ...errorResponse }));}
       console.log(data);
       if (res.status === 200) {
@@ -87,7 +87,7 @@ export default function SignUp() {
       }
     } catch (error) {
       console.log(error);
-      setButtonName('Sing Up')
+      setIsRegistring(false)
       setPopup({ isError: true, message: "Server is down please try again" });
     }
   };
@@ -339,40 +339,44 @@ export default function SignUp() {
 
               {/* Submit Button */}
               <button
-                type="submit"
-                className={`w-full relative py-3.5 rounded-xl font-semibold text-white transition-all duration-200 ${
-                  isEnterOtp
-                    ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40"
-                    : "bg-gray-300 cursor-not-allowed"
-                }`}
-                disabled={!isEnterOtp}
-              >
-                {buttonName !== "Sign Up" && (
-                  <div className="absolute inset-0- right-1/3 top-1/2 -translate-y-1/2 ">
-                    <svg
-                      className="animate-spin h-6 w-6"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                  </div>
-                )}
-                {buttonName}
-              </button>
+  type="submit"
+  disabled={isRegistring}
+  className={`
+    w-full py-3.5 rounded-xl font-semibold text-white
+    transition-all duration-200
+    flex items-center justify-center
+    disabled:cursor-not-allowed
+    ${isRegistring 
+      ? 'bg-gradient-to-r from-blue-400 to-blue-500 shadow-md' 
+      : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
+    }
+  `}
+>
+  {isRegistring ? (
+    <svg
+      className="animate-spin h-6 w-6"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
+  ) : (
+    "Register"
+  )}
+</button>
 
               {/* Divider */}
               <div className="relative my-6">
