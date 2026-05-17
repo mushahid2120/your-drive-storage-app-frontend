@@ -208,6 +208,24 @@ function Header({
                       </div>
 
                       <div className="p-2 space-y-1">
+                        {/* Manage Subscription Button */}
+                        <Link
+                          to="/plan"
+                          state={{ isAuthorized}}
+                          className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-all duration-200 group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center transition-colors">
+                            <svg
+                              className="w-5 h-5 text-blue-600"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+                            </svg>
+                          </div>
+                          <span className="font-medium">Manage Subscription</span>
+                        </Link>
+
                         {/* Logout Button */}
                         <button
                           onClick={handleLogout}

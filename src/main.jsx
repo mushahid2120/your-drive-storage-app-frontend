@@ -8,6 +8,9 @@ import Login from "./page/Login.jsx";
 import HeroPage from "./page/HeroPage.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Admin from "./page/Admin.jsx";
+import PrivacyPolicy from "./page/Privacy_Policy.jsx";
+import TermsAndCondition from "./page/Terms_And_Condition.jsx";
+import Plan from "./page/plan.jsx";
 
 
 
@@ -21,6 +24,18 @@ const router = createBrowserRouter([
   {
     path: "/directory/:dirId",
     element: <App />,
+  },
+  {
+    path: "/admin",
+    element: <Admin />,
+  },
+  {
+    path: "/privacy-policy",
+    element: <PrivacyPolicy />,
+  },
+  {
+    path: "/terms-and-conditions",
+    element: <TermsAndCondition />,
   },
   {
     path: "/admin",
@@ -45,6 +60,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HeroPage />,
+  },
+  {
+    path: "/plan",
+    element: <Plan />,
   },
   { path: "*", element: <main>This Error Page .....</main> },
 ]);
