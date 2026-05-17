@@ -1,8 +1,165 @@
 import  { useState } from "react";
 import { Link } from "react-router-dom";
-import Plan from "./Plan";
 
 function HeroPage() {
+    const [billingCycle, setBillingCycle] = useState("monthly");
+    
+  const planDetails = {
+    monthly: [
+      {
+        icon: (
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        ),
+        name: "Free",
+        for: "Starter Plan",
+        description: "Personal users who want to try the platform",
+        price: "Free",
+        included: [
+          "500 MB secure storage",
+          "File upload limit: 100 MB per file",
+          "Access from 1 device",
+          "Standard download speed",
+          "Basic email support",
+        ],
+      },
+      {
+        icon: (
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
+        ),
+        name: "Pro",
+        for: "For Students & Freelancers",
+        description:
+          "Students, freelancers, or small teams who need more space",
+        price: "₹299/month",
+        included: [
+          "100 GB secure storage",
+          "File upload limit: 50 GB per file",
+          "Access from up to 3 devices",
+          "Priority upload/download speed",
+          "Email & chat support",
+        ],
+      },
+      {
+        icon: (
+          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        ),
+        name: "Premium",
+        for: "For Professionals & Creators",
+        description: "Professionals and creators handling large media files",
+        price: "₹699/month",
+        included: [
+          "250 GB secure storage",
+          "File upload limit: 100 GB per file",
+          "Access from up to 3 devices",
+          "Priority upload/download speed",
+          "Priority customer suppor",
+        ],
+      },
+    ],
+    yearly: [
+      {
+        icon: (
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        ),
+        name: "Free",
+        for: "Starter Plan",
+        description: "Personal users who want to try the platform",
+        price: "Free",
+        included: [
+          "500 MB secure storage",
+          "File upload limit: 100 MB per file",
+          "Access from 1 device",
+          "Standard download speed",
+          "Basic email support",
+        ],
+      },
+      {
+        icon: (
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
+        ),
+        name: "Pro",
+        for: "For Students & Freelancers",
+        description:
+          "Students, freelancers, or small teams who need more space",
+        price: "₹2999/year",
+        included: [
+          "200 GB secure storage",
+          "File upload limit: 2 GB per file",
+          "Access from up to 3 devices",
+          "Priority upload/download speed",
+          "Email & chat support",
+        ],
+      },
+      {
+        icon: (
+          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        ),
+        name: "Premium",
+        for: "For Professionals & Creators",
+        description: "Professionals and creators handling large media files",
+        price: "₹6999/year",
+        included: [
+          "2TB  secure storage",
+          "File upload limit: 10 GB per file",
+          "Access from up to 3 devices",
+          "Priority upload/download speed",
+          "Priority customer suppor",
+        ],
+      },
+    ],
+  };
 
 
 
@@ -423,7 +580,98 @@ function HeroPage() {
 
       {/* Pricing Section */}
       <section id="pricing" className="py-24 bg-white">
-        <Plan/>
+        <div className="max-w-7xl mx-auto px-6">
+      <div className="text-center max-w-3xl mx-auto mb-16">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+          Choose Your Perfect Plan
+        </h2>
+        <p className="text-xl text-gray-600 mb-8">
+          Secure, reliable cloud storage for everyone. Start free, upgrade
+          anytime.
+        </p>
+
+        {/* Billing Toggle */}
+        <div className="flex items-center justify-center gap-4">
+          <div className="bg-gray-100 p-1 rounded-lg inline-flex">
+            <button
+              onClick={() => setBillingCycle("monthly")}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 ${billingCycle === "monthly" ? "bg-blue-600 text-white shadow-sm" : "text-gray-700 hover:text-gray-900"}`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingCycle("yearly")}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 ${billingCycle === "yearly" ? "bg-blue-600 text-white shadow-sm" : "text-gray-700 hover:text-gray-900"}`}
+            >
+              Yearly
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {planDetails[billingCycle].map((plan, index) => (
+          <div
+            key={index}
+            className="relative p-4 rounded-2xl bg-white border border-gray-200 transition-all duration-300 flex flex-col hover:shadow-lg"
+          >
+            <div className="absolute -top-4 right-8 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+              {plan.name}
+            </div>
+
+            <div className="mb-8">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-2 bg-green-500/10 text-green-600">
+                {plan.icon}
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                {plan.name}
+              </h3>
+              <p className="text-sm text-blue-500 font-medium">{plan.for}</p>
+              <p className="text-sm text-gray-600 mb-6 h-10">
+                {plan.description}
+              </p>
+              <div className="flex items-baseline gap-1">
+                <span className="text-4xl font-bold text-gray-900">
+                  {plan.price}
+                </span>
+              </div>
+            </div>
+
+            <Link to="/login"
+              className="w-full py-2 text-center rounded-lg font-semibold mb-8 transition-all duration-200 bg-green-500 text-white hover:bg-green-600 shadow-sm"
+            >
+              Subscribe
+            </Link >
+
+            <div className="space-y-4 flex-1">
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                What's included
+              </p>
+              <ul className="space-y-3">
+                {plan.included.map((feature, index) => (
+                  <li key={index} className="flex items-start gap-3 text-sm">
+                    <svg
+                      className="w-5 h-5 shrink-0 text-green-500 mt-0.5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-12 text-center text-sm text-gray-600">
+        All plans include automatic backups and can be cancelled anytime
+      </div>
+    </div>
       </section>
 
       {/* CTA Section */}

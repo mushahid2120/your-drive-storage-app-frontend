@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BaseUrl } from "../App";
 
 export default function Plan() {
@@ -8,7 +8,6 @@ export default function Plan() {
   const [userDetail, setUserDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPaymentSuccessfull, setIsPaymentSuccessfull] = useState(false);
-  const location = useLocation();
   const nav = useNavigate();
 
   const fetchingSubscriptionDetail = async () => {
@@ -48,14 +47,12 @@ export default function Plan() {
   };
 
   useEffect(() => {
-    if (location?.pathname === "/plan") {
       fetchingSubscriptionDetail();
       fetchUser();
-    }
   }, [isPaymentSuccessfull]);
 
-  console.log(subscription);
 
+  
   useEffect(() => {
     const existingScriptTag = document.querySelector("#rzp");
     if (existingScriptTag) return;
@@ -191,7 +188,6 @@ export default function Plan() {
   };
 
   const handlePayment = async (plan, billCycle) => {
-    if (location.pathname === "/") nav("/login");
     try {
       const response = await fetch(`${BaseUrl}/subscriptions`, {
         method: "POST",
