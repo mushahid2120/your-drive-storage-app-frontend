@@ -1,6 +1,6 @@
 import  { useState } from "react";
 import { Link } from "react-router-dom";
-import Plan from "./plan";
+import Plan from "./Plan";
 
 function HeroPage() {
 

@@ -10,7 +10,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import Admin from "./page/Admin.jsx";
 import PrivacyPolicy from "./page/Privacy_Policy.jsx";
 import TermsAndCondition from "./page/Terms_And_Condition.jsx";
-import Plan from "./page/plan.jsx";
+import Plan from "./page/Plan.jsx";
 
 
 
