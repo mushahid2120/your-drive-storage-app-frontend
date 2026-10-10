@@ -320,7 +320,7 @@ function App() {
       const data = await res.json();
       console.log(data);
       setUserDetail(null);
-      if (resData.error) setPopup({ message: data.error, isError: true });
+      if (data.error) setPopup({ message: data.error, isError: true });
       else
         setPopup({
           message: "Logout from all devices Successfully",
@@ -357,7 +357,7 @@ function App() {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50"
+      className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-slate-50"
       onClick={() => {
         setContextMenu(-1);
         setIsProfileOpen(false);
