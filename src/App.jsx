@@ -92,7 +92,6 @@ function App() {
         body: JSON.stringify({ newfilename: cleanInput }),
       });
       const resData = await res.json();
-      console.log(resData);
       if (resData.error) setPopup({ message: resData.error, isError: true });
       else setPopup({ message: "File Renamed Successfully", isError: false });
       fetchData();
@@ -113,7 +112,6 @@ function App() {
         body: JSON.stringify({ newfoldername: cleanInput }),
       });
       const resData = await res.json();
-      console.log(resData);
       fetchData();
       if (resData.error) setPopup({ message: resData.error, isError: true });
       else
@@ -135,7 +133,6 @@ function App() {
       if (resData.error) setPopup({ message: resData.error, isError: true });
       else setPopup({ message: "File Deleted Successfully", isError: false });
       fetchData();
-      console.log(resData);
     } catch (error) {
       console.log("Cannot Delete!!!");
       setPopup({ message: "Cloud not Delete File", isError: true });
@@ -151,7 +148,6 @@ function App() {
       });
       const resData = await response.json();
       fetchData();
-      console.log(resData);
       if (resData.error) setPopup({ message: resData.error, isError: true });
       else
         setPopup({ message: "Directroy Deleted Successfully", isError: false });
@@ -180,7 +176,6 @@ function App() {
           },
           { headers: { "Content-Type": "application/json" } },
         );
-        console.log({ res });
         if (res.status !== 200) console.log(res);
         return res.data;
       } catch (error) {
@@ -195,6 +190,15 @@ function App() {
       const controller = new AbortController();
       const filename = file.name;
 
+      setProgress((prevState) => ({
+        ...prevState,
+        [filename]: {
+          ...prevState[filename],
+          controller,
+          isCancelled: false,
+        },
+      }));
+
       try {
         const res = await axios.put(uploadUrl, file, {
           signal: controller.signal,
@@ -208,13 +212,10 @@ function App() {
               [filename]: {
                 ...prevState[filename],
                 dataTransfer: percent,
-                controller,
               },
             }));
           },
         });
-
-        console.log(res);
       } catch (error) {
         console.log(error);
         if (error.code === "ERR_CANCELED") {
@@ -234,8 +235,8 @@ function App() {
           { filesize: file.size },
           { headers: { "Content-Type": "application/json" } },
         );
-        console.log(res);
-        if (res.error) setPopup({ message: res.error, isError: true });
+        console.log(res)
+        if (res.data.error) setPopup({ message: res.data.error, isError: true });
         else
           setPopup({ message: "File Uploaded Successfully", isError: false });
       } catch (error) {
@@ -299,7 +300,6 @@ function App() {
         method: "POST",
       });
       const data = await res.json();
-      console.log(data);
       setUserDetail(null);
       if (data.error) return setPopup({ message: data.error, isError: true });
       else setPopup({ message: "Logout Successfully", isError: false });
@@ -318,7 +318,6 @@ function App() {
         method: "POST",
       });
       const data = await res.json();
-      console.log(data);
       setUserDetail(null);
       if (data.error) setPopup({ message: data.error, isError: true });
       else
@@ -428,7 +427,7 @@ function App() {
       <main className="max-w-7xl mx-auto px-6 pt-1 pb-4">
         {/* Upload Progress Section */}
         {Object.entries(progress).length > 0 && (
-          <UploadProgress progress={progress} />
+          <UploadProgress progress={progress} setProgress={setProgress} />
         )}
 
         {userDetail !== null && isAuthorized ? (
